@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Scatter 2Y</title>
+    <meta charset="utf-8">
+    <link href="../build/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    
+    <!-- change this file to your own root!  -->
+    <script src="../build/nv.d3.js"></script>
+
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+        }
+        html, body, #test1, svg {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="test1" class='with-3d-shadow with-transitions'>
+    <svg></svg>
+</div>
+
+<script>
+
+    // register our custom symbols to nvd3
+    // make sure your path is valid given any size because size scales if the chart scales.
+    nv.utils.symbolMap.set('thin-x', function(size) {
+        size = Math.sqrt(size);
+        return 'M' + (-size/2) + ',' + (-size/2) +
+                'l' + size + ',' + size +
+                'm0,' + -(size) +
+                'l' + (-size) + ',' + size;
+    });
+
+    //create some random data:
+    var a = randomData(1, 40);
+
+    // create the chart
+    var chart;
+    nv.addGraph(function() {
+        chart = nv.models.scatter2YChart()
+            //.showDistX(true)
+            .showDistY(true)
+            .showDistY2(true)
+            .showY2Axis(true)
+            .color(function (d) { return "#000fff" })
+            .color2(function (d) { return "#FFF000" })
+            .showLegend(false)
+            .duration(300)
+        ;
+
+        chart.dispatch.on('renderEnd', function(){
+            console.log('render complete');
+        });
+
+        chart.xAxis.tickFormat(d3.format('.02f'));
+        chart.yAxis.tickFormat(d3.format('.02f'));
+        chart.y2Axis.tickFormat(d3.format('.02f'));
+
+        
+        d3.select('#test1 svg')
+            .datum(a)
+            .call(chart)
+
+        nv.utils.windowResize(d3.select("#test1 svg").datum(a).call(chart));
+
+        chart.dispatch.on('stateChange', function(e) { ('New State:', JSON.stringify(e)); });
+        return chart;
+    });
+
+
+    function randomData(groups, points) { //# groups,# points per group
+        // smiley and thin-x are our custom symbols!
+        var data = [],
+            random = d3.random.normal();
+
+        for (i = 0; i < groups; i++) {
+            data.push({
+                key: 'Group ' + i,
+                values: []
+            });
+
+            for (j = 0; j < points; j++) {
+                data[i].values.push({
+                    x: random(),
+                    y: random(),
+                    y2: random()
+                });
+            }
+        }
+
+        return data;
+    }
+
+</script>
+</body>
+</html>
