@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Scatter 2Y</title>
@@ -49,13 +49,13 @@
     var chart;
     nv.addGraph(function() {
         chart = nv.models.scatter2YChart()
-            //.showDistX(true)
+            //.showDistX(true) //currently WIP
             .showDistY(true)
-            .showDistY2(true)
-            .showY2Axis(true)
+            .showDistY2(true) //whether second Y-axis has distribution marks
+            .showY2Axis(true) //whether second Y-axis is used
             .color(function (d) { return "#000fff" })
-            .color2(function (d) { return "#FFF000" })
-            .showLegend(false)
+            .color2(function (d) { return "#FFF000" }) //color of second Y-axis
+            .showLegend(false) //legend is currently a WIP
             .duration(300)
         ;
 
